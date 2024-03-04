@@ -5,8 +5,8 @@ import javax.imageio.ImageIO
 fun invert(input: String, output: String) {
   val pic = Picture(input)
   val newPicture = Picture(pic.width, pic.height)
-  for (x in 0..pic.width) {
-    for (y in 0..pic.height) {
+  for (x in 0..<pic.width) {
+    for (y in 0..<pic.height) {
       val currentColor = pic.getPixel(x, y)
       val newColor = Color(255 - currentColor.red, 255 - currentColor.green, 255 - currentColor.blue)
       newPicture.setPixel(x, y, newColor)
