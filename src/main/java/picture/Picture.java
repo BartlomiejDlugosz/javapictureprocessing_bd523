@@ -34,6 +34,15 @@ public class Picture {
     }
   }
 
+  public void save(String filepath) {
+    File outputfile = new File(filepath);
+    try {
+      ImageIO.write(image, "png", outputfile);
+    } catch (IOException e) {
+
+    }
+  }
+
   /**
    * Test if the specified point lies within the boundaries of this picture.
    *
