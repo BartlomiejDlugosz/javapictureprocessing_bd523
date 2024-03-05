@@ -1,7 +1,5 @@
 package picture
 
-import javax.imageio.ImageIO
-
 fun invert(input: String, output: String) {
   val pic = Picture(input)
   val newPicture = Picture(pic.width, pic.height)
