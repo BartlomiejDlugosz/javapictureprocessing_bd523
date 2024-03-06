@@ -1,9 +1,33 @@
 package picture;
 
+import kotlin.Pair;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.PipedReader;
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
+class Point {
+  int x;
+  int y;
+
+  public Point(int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  @Override
+  public String toString() {
+    return "(" + this.x + ", " + this.y + ")";
+  }
+}
+
 
 /**
  * A class that encapsulates and provides a simplified interface for manipulating an image. The
@@ -31,15 +55,6 @@ public class Picture {
       image = ImageIO.read(new File(filepath));
     } catch (IOException e) {
       throw new RuntimeException(e);
-    }
-  }
-
-  public void save(String filepath) {
-    File outputfile = new File(filepath);
-    try {
-      ImageIO.write(image, "png", outputfile);
-    } catch (IOException e) {
-
     }
   }
 
@@ -186,5 +201,57 @@ public class Picture {
     }
     sb.append("\n");
     return sb.toString();
+  }
+
+  public void invert() {
+    for (int x = 0; x < getWidth(); x++) {
+      for (int y = 0; y < getHeight(); y++) {
+        Color currentColor = getPixel(x, y);
+        Color newColor = new Color(255 - currentColor.getRed(), 255 - currentColor.getGreen(), 255 - currentColor.getBlue());
+        setPixel(x, y, newColor);
+      }
+    }
+  }
+
+  public void grayscale() {
+    for (int x = 0; x < getWidth(); x++) {
+      for (int y = 0; y < getHeight(); y++) {
+        Color currentColor = getPixel(x, y);
+        int avg = (currentColor.getRed() + currentColor.getGreen() + currentColor.getBlue()) / 3;
+        Color newColor = new Color(avg, avg, avg);
+        setPixel(x, y, newColor);
+      }
+    }
+  }
+
+  public void rotate(Integer ang, String output) {
+    double angle = ang * Math.PI / 180;
+    int newWidth = (int) (getWidth() * cos(angle) + getHeight() * sin(angle));
+    int newHeight = (int) (getWidth() * sin(angle) + getHeight() * cos(angle));
+    System.out.println(newWidth + " " + newHeight);
+    Picture newPicture = new Picture(newWidth, newHeight);
+    HashMap<Point, Color> newPoints = new HashMap<>();
+
+    for (int x = 0; x < getWidth(); x++) {
+      for (int y = 0; y < getHeight(); y++) {
+        int translatedX = x - (getWidth() / 2);
+        int translatedY = (-y) + (getHeight() / 2);
+        int rotatedX = (int) ((translatedX * cos(-angle)) - (translatedY * sin(-angle)));
+        int rotatedY = (int) ((translatedX * sin(-angle)) + (translatedY * cos(-angle)));
+        int newX = rotatedX + (newWidth / 2);
+        int newY = -(rotatedY - (newHeight / 2));
+        System.out.println(newX + " " + newY);
+//        newPoints.put(new Point(newX, newY), getPixel(x, y));
+        newPicture.setPixel(Math.max(Math.min(newX, newWidth - 1), 0), Math.max(Math.min(newY, newHeight - 1), 0), getPixel(x, y));
+      }
+    }
+//    System.out.println(newPoints.keySet());
+    newPicture.saveAs(output);
+  }
+
+  public void flip(Character type) {
+  }
+
+  public void blur() {
   }
 }
