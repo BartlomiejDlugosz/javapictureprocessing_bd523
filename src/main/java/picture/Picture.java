@@ -234,8 +234,8 @@ public class Picture {
 
     for (int x = 0; x < getWidth(); x++) {
       for (int y = 0; y < getHeight(); y++) {
-        double translatedX = x - ((double) getWidth() / 2);
-        double translatedY = (-y) + ((double) getHeight() / 2);
+        double translatedX = x - ((double) (getWidth() - 1) / 2);
+        double translatedY = (-y) + ((double) (getHeight() - 1) / 2);
         double rotatedX = (translatedX * cos(-angle)) - (translatedY * sin(-angle));
         double rotatedY = (translatedX * sin(-angle)) + (translatedY * cos(-angle));
         double newX = rotatedX + ((double) newWidth / 2);
