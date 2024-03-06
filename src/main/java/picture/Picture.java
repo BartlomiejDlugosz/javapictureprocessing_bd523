@@ -226,8 +226,8 @@ public class Picture {
 
   public void rotate(Integer ang, String output) {
     double angle = ang * Math.PI / 180;
-    int newWidth = (int) (getWidth() * cos(angle) + getHeight() * sin(angle));
-    int newHeight = (int) (getWidth() * sin(angle) + getHeight() * cos(angle));
+    int newWidth = (int) Math.abs(getWidth() * cos(angle) + getHeight() * sin(angle));
+    int newHeight = (int) Math.abs(getWidth() * sin(angle) + getHeight() * cos(angle));
     System.out.println(newWidth + " " + newHeight);
     Picture newPicture = new Picture(newWidth, newHeight);
     HashMap<Point, Color> newPoints = new HashMap<>();
@@ -236,8 +236,8 @@ public class Picture {
       for (int y = 0; y < getHeight(); y++) {
         int translatedX = x - (getWidth() / 2);
         int translatedY = (-y) + (getHeight() / 2);
-        int rotatedX = (int) ((translatedX * cos(-angle)) - (translatedY * sin(-angle)));
-        int rotatedY = (int) ((translatedX * sin(-angle)) + (translatedY * cos(-angle)));
+        int rotatedX = (int) Math.round((translatedX * cos(-angle)) - (translatedY * sin(-angle)));
+        int rotatedY = (int) Math.round((translatedX * sin(-angle)) + (translatedY * cos(-angle)));
         int newX = rotatedX + (newWidth / 2);
         int newY = -(rotatedY - (newHeight / 2));
         System.out.println(newX + " " + newY);
