@@ -225,24 +225,24 @@ public class Picture {
   }
 
   public void rotate(Integer ang, String output) {
-    double angle = ang * Math.PI / 180;
-    int newWidth = (int) Math.abs(getWidth() * cos(angle) + getHeight() * sin(angle));
-    int newHeight = (int) Math.abs(getWidth() * sin(angle) + getHeight() * cos(angle));
+    double angle = Math.toRadians(ang);
+    int newWidth = (int) Math.round(Math.abs(getWidth() * cos(angle) + getHeight() * sin(angle)));
+    int newHeight = (int) Math.round(Math.abs(getWidth() * sin(angle) + getHeight() * cos(angle)));
     System.out.println(newWidth + " " + newHeight);
     Picture newPicture = new Picture(newWidth, newHeight);
     HashMap<Point, Color> newPoints = new HashMap<>();
 
     for (int x = 0; x < getWidth(); x++) {
       for (int y = 0; y < getHeight(); y++) {
-        int translatedX = x - (getWidth() / 2);
-        int translatedY = (-y) + (getHeight() / 2);
-        int rotatedX = (int) Math.round((translatedX * cos(-angle)) - (translatedY * sin(-angle)));
-        int rotatedY = (int) Math.round((translatedX * sin(-angle)) + (translatedY * cos(-angle)));
-        int newX = rotatedX + (newWidth / 2);
-        int newY = -(rotatedY - (newHeight / 2));
+        double translatedX = x - ((double) getWidth() / 2);
+        double translatedY = (-y) + ((double) getHeight() / 2);
+        double rotatedX = (translatedX * cos(-angle)) - (translatedY * sin(-angle));
+        double rotatedY = (translatedX * sin(-angle)) + (translatedY * cos(-angle));
+        double newX = rotatedX + ((double) newWidth / 2);
+        double newY = -(rotatedY - ((double) newHeight / 2));
         System.out.println(newX + " " + newY);
 //        newPoints.put(new Point(newX, newY), getPixel(x, y));
-        newPicture.setPixel(Math.max(Math.min(newX, newWidth - 1), 0), Math.max(Math.min(newY, newHeight - 1), 0), getPixel(x, y));
+        newPicture.setPixel((int) Math.max(Math.min(Math.round(newX), newWidth - 1), 0), (int) Math.max(Math.min(Math.round(newY), newHeight - 1), 0), getPixel(x, y));
       }
     }
 //    System.out.println(newPoints.keySet());
