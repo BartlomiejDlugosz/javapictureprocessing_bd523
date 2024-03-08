@@ -298,7 +298,7 @@ public class Picture {
           for (int j = -1; j <= 1; j++) {
              Color c = getPixel(x + i, y + j);
              red += c.getRed();
-             green += c.getGreen();
+             green + = c.getGreen();
              blue += c.getBlue();
           }
         }
