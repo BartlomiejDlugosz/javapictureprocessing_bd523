@@ -226,26 +226,35 @@ public class Picture {
 
   public void rotate(Integer ang, String output) {
     double angle = Math.toRadians(ang);
-    int newWidth = (int) Math.round(Math.abs(getWidth() * cos(angle) + getHeight() * sin(angle)));
-    int newHeight = (int) Math.round(Math.abs(getWidth() * sin(angle) + getHeight() * cos(angle)));
-    System.out.println(newWidth + " " + newHeight);
+    int newWidth = (int) Math.round(Math.abs(getWidth() * cos(angle)) + Math.abs(getHeight() * sin(angle)));
+    int newHeight = (int) Math.round(Math.abs(getWidth() * sin(angle)) + Math.abs(getHeight() * cos(angle)));
     Picture newPicture = new Picture(newWidth, newHeight);
-    HashMap<Point, Color> newPoints = new HashMap<>();
 
     for (int x = 0; x < getWidth(); x++) {
       for (int y = 0; y < getHeight(); y++) {
-        double translatedX = x - ((double) (getWidth() - 1) / 2);
-        double translatedY = (-y) + ((double) (getHeight() - 1) / 2);
+        double translatedX = x - ((double) getWidth() / 2);
+        double translatedY = (-y) + ((double) getHeight() / 2);
         double rotatedX = (translatedX * cos(-angle)) - (translatedY * sin(-angle));
         double rotatedY = (translatedX * sin(-angle)) + (translatedY * cos(-angle));
         double newX = rotatedX + ((double) newWidth / 2);
         double newY = -(rotatedY - ((double) newHeight / 2));
-        System.out.println(newX + " " + newY);
+//        System.out.println(newX + " " + Math.round(newX) + " " + Math.max(Math.min(Math.round(newX), newWidth - 1), 0) + " " + newY);
 //        newPoints.put(new Point(newX, newY), getPixel(x, y));
+        switch(ang) {
+          case 90:
+            newX -= 1;
+            break;
+          case 270:
+            newY -= 1;
+            break;
+          case 180:
+            newX -=1;
+            newY -= 1;
+            break;
+        }
         newPicture.setPixel((int) Math.max(Math.min(Math.round(newX), newWidth - 1), 0), (int) Math.max(Math.min(Math.round(newY), newHeight - 1), 0), getPixel(x, y));
       }
     }
-//    System.out.println(newPoints.keySet());
     newPicture.saveAs(output);
   }
 

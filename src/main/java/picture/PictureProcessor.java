@@ -7,11 +7,6 @@ import static java.lang.Math.sin;
 
 public class PictureProcessor {
   public static void main(String[] args) {
-
-    double angle = 45 * Math.PI / 180;
-    System.out.println(sin(angle) + cos(angle));
-
-
     switch(args[0]) {
       case "invert":
         invert(args[1], args[2]);
