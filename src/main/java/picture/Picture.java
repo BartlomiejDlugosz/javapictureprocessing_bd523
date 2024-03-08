@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PipedReader;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -258,9 +259,71 @@ public class Picture {
     newPicture.saveAs(output);
   }
 
-  public void flip(Character type) {
+  public void flip(Character type, String output) {
+    Picture newImage = new Picture(getWidth(), getHeight());
+    switch(type) {
+      case 'H':
+        for (int x = 0; x < getWidth(); x++) {
+          for (int y = 0; y < getHeight(); y++) {
+            newImage.setPixel((getWidth() - 1) - x, y, getPixel(x, y));
+          }
+        }
+        break;
+      case 'V':
+        for (int x = 0; x < getWidth(); x++) {
+          for (int y = 0; y < getHeight(); y++) {
+            newImage.setPixel(x, (getHeight() - 1) - y, getPixel(x, y));
+          }
+        }
+        break;
+      default:
+        throw new UnsupportedOperationException();
+    }
+    newImage.saveAs(output);
   }
 
-  public void blur() {
+  public void blur(String output) {
+    Picture newPicture = new Picture(getWidth(), getHeight());
+    for (int x = 0; x < getWidth(); x++) {
+      for (int y = 0; y < getHeight(); y++) {
+        newPicture.setPixel(x, y, getPixel(x, y));
+      }
+    }
+    for (int x = 1; x < getWidth() - 1; x++) {
+      for (int y = 1; y < getHeight() - 1; y++) {
+        int red = 0;
+        int green = 0;
+        int blue = 0;
+        for (int i = -1; i <= 1; i++) {
+          for (int j = -1; j <= 1; j++) {
+             Color c = getPixel(x + i, y + j);
+             red += c.getRed();
+             green += c.getGreen();
+             blue += c.getBlue();
+          }
+        }
+        Color avg = new Color(red / 9, green / 9, blue / 9);
+        newPicture.setPixel(x, y, avg);
+      }
+    }
+    newPicture.saveAs(output);
+  }
+
+  public void blend(String[] inputs, String output) {
+    Picture[] pictures = Arrays.stream(inputs).map(Picture::new).toArray(Picture[]::new);
+    for (int x = 0; x < getWidth(); x++) {
+      for (int y = 0; y < getHeight(); y++) {
+        int red = 0;
+        int green = 0;
+        int blue = 0;
+        for (Picture p : pictures) {
+          Color c = p.getPixel(x, y);
+          red += c.getRed();
+          green += c.getGreen();
+          blue += c.getBlue();
+        }
+        setPixel(x, y, new Color(red / pictures.length, green / pictures.length, blue / pictures.length));
+      }
+    }
   }
 }

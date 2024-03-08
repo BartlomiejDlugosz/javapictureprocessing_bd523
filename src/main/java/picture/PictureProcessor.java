@@ -21,7 +21,7 @@ public class PictureProcessor {
         flip(args[1].charAt(0), args[2], args[3]);
         break;
       case "blend":
-        blend(Arrays.copyOfRange(args, 1, args.length - 1), args[2]);
+        blend(Arrays.copyOfRange(args, 1, args.length - 1), args[args.length - 1]);
         break;
       case "blur":
         blur(args[1], args[2]);
@@ -52,18 +52,29 @@ public class PictureProcessor {
 
   private static void flip(Character type, String input, String output) {
     Picture picture = new Picture(input);
-    picture.flip(type);
-    picture.saveAs(output);
+    picture.flip(type, output);
   }
 
-  private static void blend(String[] arg, String arg1) {
-
+  private static void blend(String[] inputs, String output) {
+    int minWidth = Integer.MAX_VALUE;
+    int minHeight = Integer.MAX_VALUE;
+    for (String input : inputs) {
+      Picture pic = new Picture(input);
+      if (pic.getWidth() < minWidth) {
+        minWidth = pic.getWidth();
+      }
+      if (pic.getHeight() < minHeight)  {
+        minHeight = pic.getHeight();
+      }
+    }
+    Picture p = new Picture(minWidth, minHeight);
+    p.blend(inputs, output);
+    p.saveAs(output);
   }
 
   private static void blur(String input, String output) {
     Picture picture = new Picture(input);
-    picture.blur();
-    picture.saveAs(output);
+    picture.blur(output);
   }
 
 }
